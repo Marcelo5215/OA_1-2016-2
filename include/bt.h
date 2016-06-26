@@ -4,8 +4,9 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <string.h>
+	#include "index.h"
 
-	#define TAM_CHAVE 9
+	#define TAM_CHAVE 10
 
 	typedef struct BTree* pBTree;
 
@@ -21,8 +22,14 @@
 	}arvB_ret;
 
 	pBTree criaArvoreB(int ordem);
+	pBTree criaPagina(int ordem);
 	arvB_ret limpaArvoreB(pBTree arvB);
 	pBTree criaFilho(char* chave, int ordem);
+	pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem);
 	pBTree buscaAB(pBTree raiz, int *ind ,char* chave);
+	pBTree insereAB(pBTree raiz, char* chave);
+	pBTree buscaDir(pBTree raiz, char *chave, pBTree raizFilho);
+	void inOrder(pBTree raiz);
+	int insere(pBTree local, char* chave);
 
 #endif
