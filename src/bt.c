@@ -80,19 +80,15 @@ pBTree buscaAB(pBTree raiz, int *ind ,char* chave){
 	if (raiz == NULL){
 		return NULL;
 	}
-	int i;
-	for (i = 0; i < raiz->n_chaves; ++i){
-		if(chave == raiz->chave[i]){
-			*ind = i;
-			return raiz;
-		}
+	int i = 0, index = 0;
+	while( strcmp(raiz->chave[i], chave) < 0){
+		i++;
+		index++;
 	}
-
-	for (i = 0; i < raiz->ordem ; ++i){
-		return(buscaAB(raiz->filhos[i], ind, chave));	
+	if(strcmp(raiz->chave[i], chave) == 0){
+		return raiz;
 	}
-
-	return NULL;
+	return(buscaAB(raiz->filhos[i], ind, chave));	
 }
 
 pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem){
@@ -191,7 +187,6 @@ pBTree insereAB(pBTree raiz, char* chave){
 			}
 		}
 	}
-
 }
 
 int insere(pBTree local, char* chave){
