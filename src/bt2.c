@@ -2,6 +2,27 @@
 
 int insere(pBTree local, char* chave);
 
+
+//encontra o local no qual se deve inserir o elemento
+int binary_search(char *key, char **chaves, int ordem) {
+	int ini = 0, fim = ordem;
+	
+	while (ini < fim) {
+		int meio = (ini + fim / 2);
+		
+		if (strcmp(chaves[meio], key) == 0) {
+			return meio;
+		} else if (strcmp(chaves[meio], key) > 0) {
+			fim = meio;
+		} else {
+			ini = meio + 1;
+		}
+	}
+	
+	return ini;
+}
+
+
 pBTree criaArvoreB(int ordem){
 	int  i;
 	pBTree arvB = (pBTree)malloc(sizeof(BTree));
@@ -102,6 +123,70 @@ pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem){
 	}
 
 	return arvB;
+}
+
+
+//modificar para tb adicionar ponteiros
+pBTree create (char **temp, int ini, int fim, int ordem) {
+	pBTree filho = criaArvoreB(ordem);
+	int i, j;
+	
+	for (i = ini, j = 0; i <= fim; i++, j++) {
+		strcpy(filho->chaves[j], temp[i]);
+	}
+	filho->n_chaves = j;
+	
+	return filho;
+}
+
+char *insereAB_v2(pBTree raiz, char* chave){
+	
+	static char **temp;
+	static pBTree filho2;
+	int ind = binary_search(chave, raiz->chaves, raiz->ordem);
+	
+	if (ind < raiz->ordem && !strcmp(raiz->chaves[ind], chave)) {
+		printf("CHAVE JÁ EXISTENTE\n");
+		return NULL;
+	} else {
+		if (raiz->filhos[ind] != NULL) {
+			char *subiu = insereAB_v2(raiz->filhos[ind], chave);
+			
+			if (subiu == NULL)
+				return NULL;
+			
+			if (raiz->n_chaves < raiz->ordem - 1) {
+				//somente adiciona
+			} else {
+				//cria outra coisa temporaria
+			}
+			
+		} else if (raiz->n_chaves < raiz->ordem - 1) {
+			int i;
+			
+			for (i = n_chaves; ind < i; i--) {
+				strcpy(raiz->chaves[i], raiz->chaves[i - 1]);
+			}
+			return NULL;
+		} else {
+			temp = (char**) malloc(sizeof(char*) * raiz->ordem);
+			
+			for (i = raiz->ordem; ind < i; i--) {
+				strcpy(temp[i], raiz->chaves[i - 1]);
+			}
+			for (i = ind; i >= 0; i--) {
+				strcpy(temp[i], raiz->chaves[i]);
+			}
+			
+			char *sobe = temp[raiz->ordem / 2];
+			
+			raiz->n_chaves = raiz->ordem / 2;
+			
+			filho2 = create(temp, raiz->ordem / 2 + 1, raiz->ordem, raiz->ordem);
+			
+			return sobe;
+		}
+	}
 }
 
 pBTree insereAB(pBTree raiz, char* chave){
