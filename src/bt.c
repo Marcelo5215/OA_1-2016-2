@@ -39,27 +39,7 @@ pBTree criaArvoreB(int ordem){
 	arvB->ordem = ordem;
 	arvB->n_chaves = 0;
 
-	arvB->pai = arvB;
-	
-	return arvB;
-}
-
-pBTree criaPagina(int ordem){
-	int  i;
-	pBTree arvB = (pBTree)malloc(sizeof(BTree));
-
-	arvB->chave = (char**)malloc(sizeof(char*) * ordem-1);
-	for (i = 0; i < ordem; ++i){
-		arvB->chave[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
-	}
-	arvB->filhos = (pBTree*)malloc(sizeof(pBTree) * ordem);
-	for (i = 0; i < ordem; ++i){
-		arvB->filhos[i] = NULL;
-	}
-	arvB->ordem = ordem;
-	arvB->n_chaves = 0;
-
-	arvB->pai = NULL; //diferenca entre cria ArvoreB e criaPagina
+	arvB->pai = NULL;
 	
 	return arvB;
 }
@@ -88,20 +68,22 @@ arvB_ret limpaArvoreB(pBTree arvB){
 	return ARVB_OK;
 }
 
-// pBTree buscaAB(pBTree raiz, int *ind ,char* chave){
-// 	if (raiz == NULL){
-// 		return NULL;
-// 	}
-// 	int i = 0, index = 0;
-// 	while( strcmp(raiz->chave[i], chave) < 0){
-// 		i++;
-// 		index++;
-// 	}
-// 	if(strcmp(raiz->chave[i], chave) == 0){
-// 		return raiz;
-// 	}
-// 	return(buscaAB(raiz->filhos[i], ind, chave));	
-// }
+pBTree buscaAB(pBTree raiz, int *seeks ,char* chave){
+	if (raiz == NULL){
+		return NULL;
+	}
+	int i = 0, index = 0;
+	while( strcmp(raiz->chave[i], chave) < 0){
+		i++;
+		index++;
+	}
+
+	*seeks = *seeks + 1;
+	if(strcmp(raiz->chave[i], chave) == 0){
+		return raiz;
+	}
+	return(buscaAB(raiz->filhos[index], seeks, chave));	
+}
 
 pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem){
 	pBTree arvB = criaArvoreB(ordem);
@@ -300,8 +282,7 @@ void insereAB(pBTree *raiz, char* chave){
 			}
 		}
 	}
-
-
+	return;
 }
 
 void limpaPagina(pBTree local){

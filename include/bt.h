@@ -27,7 +27,7 @@
 	arvB_ret limpaArvoreB(pBTree arvB);
 	pBTree criaFilho(char* chave, int ordem);
 	pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem);
-	pBTree buscaAB(pBTree raiz, int *ind ,char* chave);
+	pBTree buscaAB(pBTree raiz, int *seeks ,char* chave);
 	void insereAB(pBTree *raiz, char* chave);
 	pBTree buscaDir(pBTree raiz, char *chave);
 	void inOrder(pBTree raiz);

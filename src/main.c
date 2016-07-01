@@ -44,6 +44,23 @@ int main(int agrc, char** argv){
 	inOrder(arv);
 	fclose(e);
 
+	int seeks;
+
+	if(buscaAB(arv, &seeks, getKey(IP, 0)) != NULL){
+		printf("seeks = %d\n", seeks);
+		seeks = 0;
+	}
+
+	if(buscaAB(arv, &seeks, getKey(IP, 1)) != NULL){
+		printf("seeks = %d\n", seeks);
+		seeks = 0;
+	}
+	if(buscaAB(arv, &seeks, getKey(IP, 3)) != NULL){
+		printf("seeks = %d\n", seeks);
+		seeks = 0;
+	}
+
+
 	free(IP);
 	limpaArvoreB(arvB);
 	//free(arv);
