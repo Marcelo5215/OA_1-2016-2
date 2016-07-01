@@ -160,8 +160,22 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			
 			if (raiz->n_chaves < raiz->ordem - 1) {
 				//somente adiciona
+				raiz->filhos[n_chaves + 1] = raiz->filhos[n_chave];
+				int i;
+				for (i = raiz->n_chaves; i > ind; i--) {
+					strcpy(raiz->chaves[i], raiz->chaves[i - 1]);
+					raiz->filhos[i] = rauz->filhos[i - 1];
+				}
+				strcpy(raiz->chaves[ind], sobe);
+				raiz->filhos[ind] = filho2;
+				free(temp);
+				return NULL;
 			} else {
+				if (raiz == raiz->pai) {
+					//aumenta o tamanho
+				} else {
 				//cria outra coisa temporaria
+				}
 			}
 			
 		} else if (raiz->n_chaves < raiz->ordem - 1) {
@@ -169,6 +183,8 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			for (i = raiz->n_chaves; ind < i; i--) {
 				strcpy(raiz->chave[i], raiz->chave[i - 1]);
 			}
+			strcpy(raiz->chave[ind], chave);
+			raiz->n_chaves++;
 			return NULL;
 		} else {
 			temp = (char**) malloc(sizeof(char*) * raiz->ordem);
