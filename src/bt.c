@@ -88,39 +88,20 @@ arvB_ret limpaArvoreB(pBTree arvB){
 	return ARVB_OK;
 }
 
-pBTree criaFilho(char* chave, int ordem){
-	if(strlen(chave) > 8){
-		return NULL;
-	}
-	int i;
-	pBTree filho = (pBTree)malloc(sizeof(BTree));
-
-	filho->chave = (char**)malloc(sizeof(char*) * ordem-1);
-	for (i = 0; i < ordem; ++i){
-		filho->chave[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
-	}
-
-	filho->filhos = (pBTree*)malloc(sizeof(pBTree) * ordem);
-	filho->ordem = ordem;
-	filho->n_chaves = 0;
-
-	return filho;
-}
-
-pBTree buscaAB(pBTree raiz, int *ind ,char* chave){
-	if (raiz == NULL){
-		return NULL;
-	}
-	int i = 0, index = 0;
-	while( strcmp(raiz->chave[i], chave) < 0){
-		i++;
-		index++;
-	}
-	if(strcmp(raiz->chave[i], chave) == 0){
-		return raiz;
-	}
-	return(buscaAB(raiz->filhos[i], ind, chave));	
-}
+// pBTree buscaAB(pBTree raiz, int *ind ,char* chave){
+// 	if (raiz == NULL){
+// 		return NULL;
+// 	}
+// 	int i = 0, index = 0;
+// 	while( strcmp(raiz->chave[i], chave) < 0){
+// 		i++;
+// 		index++;
+// 	}
+// 	if(strcmp(raiz->chave[i], chave) == 0){
+// 		return raiz;
+// 	}
+// 	return(buscaAB(raiz->filhos[i], ind, chave));	
+// }
 
 pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem){
 	pBTree arvB = criaArvoreB(ordem);
@@ -370,21 +351,21 @@ int insere(pBTree local, char* chave){
 	return i;
 }
 
-pBTree buscaDir(pBTree raiz, char *chave){
-	int i = 0;
-	int index = 0;
-	while(strcmp(raiz->chave[i], chave) < 0 && i < raiz->n_chaves){
-		i++;
-		index++;
-	}
-	if(i == raiz->n_chaves-1){
-		index++;
-	}
-	else if(raiz->filhos[index] == NULL){
-		return raiz;
-	}
-	return (buscaDir(raiz->filhos[index], chave));
-}
+// pBTree buscaDir(pBTree raiz, char *chave){
+// 	int i = 0;
+// 	int index = 0;
+// 	while(strcmp(raiz->chave[i], chave) < 0 && i < raiz->n_chaves){
+// 		i++;
+// 		index++;
+// 	}
+// 	if(i == raiz->n_chaves-1){
+// 		index++;
+// 	}
+// 	else if(raiz->filhos[index] == NULL){
+// 		return raiz;
+// 	}
+// 	return (buscaDir(raiz->filhos[index], chave));
+// }
 
 void inOrder(pBTree raiz){
 	if(raiz == NULL){
