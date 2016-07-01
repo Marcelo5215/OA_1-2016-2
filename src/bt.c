@@ -246,7 +246,6 @@ pBTree create (char **temp, pBTree *filhos, int ini, int fim, int ordem) {
 char *insereAB_v2(pBTree raiz, char* chave){
 	
 	static char **temp;
-	static pBTree filhos1;
 	static pBTree filho2;
 	int ind = binary_search(chave, raiz->chave, raiz->ordem);
 	int i;
@@ -285,15 +284,16 @@ char *insereAB_v2(pBTree raiz, char* chave){
 					temp1[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
 				}
 				for (i = raiz->ordem - 1; ind < i; i--) {
-					strcpy(temp[i], raiz->chave[i - 1]);
+					strcpy(temp1[i], raiz->chave[i - 1]);
 				}
-				strcpy(temp[ind], subiu);
+				strcpy(temp1[ind], subiu);
 				for (i = ind - 1; i >= 0; i--) {
-					strcpy(temp[i], raiz->chave[i]);
+					strcpy(temp1[i], raiz->chave[i]);
 				}
 				
+				free(temp); //ja usei subiu
 				
-				filhos1 = (pBTree*)malloc(sizeof(pBTree) * raiz->ordem + 1);
+				pBTree *filhos1 = (pBTree*)malloc(sizeof(pBTree) * raiz->ordem + 1);
 				for (i = 0; i < raiz->ordem + 1; ++i){
 					filhos1[i] = NULL;
 				}
@@ -326,15 +326,23 @@ char *insereAB_v2(pBTree raiz, char* chave){
 					strcpy(new_raiz->chave[j], temp[i]);
 					new_raiz->filhos[j + 1] = filhos1[i];
 				}
-				new_raiz->filhos0i] = filhos2;
+				new_raiz->filhos[0] = filhos2;
 				new_raiz->n_chaves = raiz->ordem / 2;
 				
 				if (raiz == raiz->pai) {
-					pBTree new_pai = criaArvoreB(raiz->ordem);
-					
 					//aumenta o tamanho
+					pBTree new_pai = criaArvoreB(raiz->ordem);
+					strcpy(new_pai->chaves[0], subiu);
+					new_pai->filho[0] = raiz;
+					new_pai->filho[1] = new_raiz;
+					
+					atualizapai(new_pai, new_pai);
 				} else {
 					//cria outra coisa temporaria
+					filho2 = new_raiz;
+					temp = temp1;
+					
+					return sobe;
 				}
 			}
 			
