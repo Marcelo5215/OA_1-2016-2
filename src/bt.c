@@ -23,22 +23,23 @@ int binary_search(char *key, char **chaves, int ordem) {
 }
 
 
-pBTree criaArvoreB(int ordem){
+pTree criaArvoreB(int ordem){
 	int  i;
-	pBTree arvB = (pBTree)malloc(sizeof(BTree));
+	pTree arvB = (pTree)malloc(sizeof(Tree));
+	arvB->raiz = (pBTree)malloc(sizeof(BTree));
 
-	arvB->chave = (char**)malloc(sizeof(char*) * ordem-1);
+	arvB->raiz->chave = (char**)malloc(sizeof(char*) * ordem-1);
 	for (i = 0; i < ordem; ++i){
-		arvB->chave[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
+		arvB->raiz->chave[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
 	}
-	arvB->filhos = (pBTree*)malloc(sizeof(pBTree) * ordem);
+	arvB->raiz->filhos = (pBTree*)malloc(sizeof(pBTree) * ordem);
 	for (i = 0; i < ordem; ++i){
-		arvB->filhos[i] = NULL;
+		arvB->raiz->filhos[i] = NULL;
 	}
-	arvB->ordem = ordem;
-	arvB->n_chaves = 0;
+	arvB->raiz->ordem = ordem;
+	arvB->raiz->n_chaves = 0;
 
-	arvB->pai = arvB;
+	arvB->pai = arvB->raiz;
 	
 	return arvB;
 }
@@ -57,8 +58,6 @@ pBTree criaPagina(int ordem){
 	}
 	arvB->ordem = ordem;
 	arvB->n_chaves = 0;
-
-	arvB->pai = NULL; //diferenca entre cria ArvoreB e criaPagina
 	
 	return arvB;
 }
@@ -85,6 +84,16 @@ arvB_ret limpaArvoreB(pBTree arvB){
 	free(arvB);
 
 	return ARVB_OK;
+}
+
+arvB_ret limpaArvore (pTree arvB) {
+	int ret = limpaArvoreB(arvB->raiz);
+	if (ret == ARVB_OK) {
+		arvB->pai = NULL;
+		free(arvB);
+	}
+	return ARVB_OK;
+	
 }
 
 pBTree criaFilho(char* chave, int ordem){
@@ -148,19 +157,19 @@ pBTree create (char **temp, int ini, int fim, int ordem) {
 	return filho;
 }
 
-pBTree insereAB_sec(pBTree raiz, char* chave){
+pTree insereAB_sec(pTree raiz, char* chave){
 	int i, index, novo_n, j;
 	char promotedKey[10];
 	pBTree filho, nova_raiz, pont;
 
 	//se existir lugar na pagina raiz
-	if (raiz->n_chaves < raiz->ordem - 1){
+	if (raiz->raiz->n_chaves < raiz->raiz->ordem - 1){
 		insere(raiz, chave);
 		return raiz;
 	}
 	else{
 		//busca o nó folha onde o filho deveria ser inserido
-		filho = buscaDir(raiz, chave);
+		filho = buscaDir(raiz->raiz, chave);
 		//se existir lugar no nó do filho
 		if (filho->n_chaves < filho->ordem - 1){
 			insere(filho, chave);
@@ -168,25 +177,25 @@ pBTree insereAB_sec(pBTree raiz, char* chave){
 		}
 		else{
 			//split
-			pBTree esq = raiz;
-			pBTree dir = criaArvoreB(raiz->ordem);
+			pBTree esq = raiz->raiz;
+			pBTree dir = criaArvoreB(raiz->raiz->ordem);
 			//copia metade das chaves do raiz para a esquerda(esq), eoutra metade para a direita(dir)
 			//e a chave no meio será a chave promovida 
 			novo_n = 0; 
-			strcpy(promotedKey, raiz->chave[raiz->n_chaves/2]);
-			for (i = 0; i < raiz->n_chaves/2; ++i){
-			  	strcpy(esq->chave[i], raiz->chave[i]);
+			strcpy(promotedKey, raiz->raiz->chave[raiz->n_chaves/2]);
+			for (i = 0; i < raiz->raiz->n_chaves/2; ++i){
+			  	strcpy(esq->chave[i], raiz->raiz->chave[i]);
 			  	novo_n++;
 			}
 			j = 0; 
-			for (i = raiz->n_chaves/2 + 1; i < raiz->n_chaves; ++i, j++){
-			  	strcpy(dir->chave[j], raiz->chave[i]);
+			for (i = raiz->raiz->n_chaves/2 + 1; i < raiz->raiz->n_chaves; ++i, j++){
+			  	strcpy(dir->chave[j], raiz->raiz->chave[i]);
 			  	dir->n_chaves++;
 			} 
-			raiz->n_chaves = novo_n;
+			raiz->raiz->n_chaves = novo_n;
 			//caso o pai exista e tenha vaga
 			if (raiz->pai != NULL && raiz->pai->n_chaves < raiz->pai->ordem -1){
-				index = insere(raiz->pai, raiz->chave[raiz->n_chaves/2]);
+				index = insere(raiz->pai, raiz->raiz->chave[raiz->raiz->n_chaves/2]);
 				if(index > 0){
 					raiz->pai->filhos[index - 1] = esq;
 					raiz->pai->filhos[index] = dir;
@@ -219,8 +228,9 @@ pBTree insereAB_sec(pBTree raiz, char* chave){
 					i++;
 					index++;
 				}
-				esq->pai = AUX;
-				dir->pai = AUX;
+// 				esq->pai = AUX;
+// 				dir->pai = AUX;
+				raiz->pai = AUX;
 				if(index > 0){
 					AUX->filhos[index] = esq;
 					AUX->filhos[index + 1] = dir;
@@ -237,7 +247,7 @@ pBTree insereAB_sec(pBTree raiz, char* chave){
 				return nova_raiz;
 			}
 			//monta a nova raiz
-			nova_raiz = criaArvoreB(raiz->ordem);
+			nova_raiz = criaArvoreB(raiz->raiz->ordem);
 			index = insere(nova_raiz, promotedKey);
 			insere(dir, chave);
 			esq->pai = nova_raiz;
@@ -296,6 +306,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 				return NULL;
 			} else {
 				if (raiz == raiz->pai) {
+					pBTree newPai = 
 					//aumenta o tamanho
 				} else {
 					//cria outra coisa temporaria

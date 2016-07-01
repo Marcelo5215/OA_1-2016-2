@@ -13,10 +13,16 @@
 	typedef struct BTree{
 		char **chave;
 		pBTree *filhos;
-		pBTree pai;
+		//pBTree pai;
 		int n_chaves, ordem; 
 	}BTree;
 
+	typedef struct Tree {
+		pBTree raiz;
+		pBTree pai;
+	} Tree;
+	typedef struct Tree* pTree;
+	
 	typedef enum arvB_ret{
 		ARVB_OK,
 		ARVB_ERR,

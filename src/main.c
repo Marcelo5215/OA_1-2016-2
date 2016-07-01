@@ -22,14 +22,23 @@ int main(int agrc, char** argv){
 	IP = criaIndicePrimario("lista.txt");
 	imprimeIndicePrimario(IP);
 
-	pBTree arvB = criaArvoreB(3);
+	printf("0\n");
+	pTree arvB = criaArvoreB(3);
+	printf("1\n");
 	arvB = insereAB(arvB, getKey(IP, 0));
+	printf("2\n");
 	arvB = insereAB(arvB, getKey(IP, 1));
+	printf("3\n");
 	arvB = insereAB(arvB, getKey(IP, 2));
+	printf("4\n");
 	arvB = insereAB(arvB, getKey(IP, 3));
+	printf("5\n");
 	arvB = insereAB(arvB, getKey(IP, 4));
+	printf("6\n");
 	arvB = insereAB(arvB, getKey(IP, 5));
+	printf("7\n");
 	arvB = insereAB(arvB, getKey(IP, 6));
+	printf("8\n");
 	inOrder(arvB);
 
 	//escrita
