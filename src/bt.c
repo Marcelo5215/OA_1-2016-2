@@ -9,7 +9,7 @@ int binary_search(char *key, char **chaves, int ordem) {
 	int ini = 0, fim = ordem;
 	
 	while (ini < fim) {
-		int meio = (ini + fim / 2);
+		int meio = (ini + fim) / 2;
 		
 		if (strcmp(chaves[meio], key) == 0) {
 			return meio;
@@ -269,6 +269,8 @@ char *insereAB_v2(pBTree raiz, char* chave){
 	static pBTree filho2;
 	int ind = binary_search(chave, raiz->chave, raiz->ordem);
 	int i;
+	
+	printf("%p %d\n", raiz, ind);
 
 	if (ind < raiz->ordem && !strcmp(raiz->chave[ind], chave)) {
 		printf("CHAVE JÁ EXISTENTE\n");
@@ -389,7 +391,10 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			for (i = ind - 1; i >= 0; i--) {
 				strcpy(temp[i], raiz->chave[i]);
 			}
-			
+			for (i = 0; i < raiz->ordem; ++i){
+				printf("%s\t", temp[1]);
+			}
+			printf("\n");
 			
 			pBTree *filhos = (pBTree*)malloc(sizeof(pBTree) * raiz->ordem + 1);
 			for (i = 0; i < raiz->ordem + 1; ++i){

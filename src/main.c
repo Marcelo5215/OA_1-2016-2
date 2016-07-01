@@ -34,6 +34,7 @@ int main(int agrc, char** argv){
 	arvB = insereAB_helper(arvB, getKey(IP, 0));
 	printf("1\n");
 	arvB = insereAB_helper(arvB, getKey(IP, 1));
+	inOrder(arvB);
 	printf("2\n");
 	arvB = insereAB_helper(arvB, getKey(IP, 2));
 	printf("3\n");
