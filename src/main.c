@@ -23,12 +23,26 @@ int main(int agrc, char** argv){
 	imprimeIndicePrimario(IP);
 
 	pBTree arvB = criaArvoreB(3);
-	insereAB(&arvB, getKey(IP, 0));
-	insereAB(&arvB, getKey(IP, 1));
-	insereAB(&arvB, getKey(IP, 2));
-	insereAB(&arvB, getKey(IP, 3));
-	insereAB(&arvB, getKey(IP, 4));
-	insereAB(&arvB, getKey(IP, 5));
+	//insereAB(&arvB, getKey(IP, 0));
+	//insereAB(&arvB, getKey(IP, 1));
+	//insereAB(&arvB, getKey(IP, 2));
+	//insereAB(&arvB, getKey(IP, 3));
+	//insereAB(&arvB, getKey(IP, 4));
+	//insereAB(&arvB, getKey(IP, 5));
+	
+	printf("0\n");
+	arvB = insereAB_helper(arvB, getKey(IP, 0));
+	printf("1\n");
+	arvB = insereAB_helper(arvB, getKey(IP, 1));
+	printf("2\n");
+	arvB = insereAB_helper(arvB, getKey(IP, 2));
+	printf("3\n");
+	arvB = insereAB_helper(arvB, getKey(IP, 3));
+	printf("4\n");
+	arvB = insereAB_helper(arvB, getKey(IP, 4));
+	printf("5\n");
+	arvB = insereAB_helper(arvB, getKey(IP, 5));
+	printf("6\n");
 	// arvB = insereAB(arvB, getKey(IP, 6));
 	inOrder(arvB);
 

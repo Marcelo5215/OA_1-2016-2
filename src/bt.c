@@ -39,6 +39,26 @@ pBTree criaArvoreB(int ordem){
 	arvB->ordem = ordem;
 	arvB->n_chaves = 0;
 
+	arvB->pai = arvB;
+	
+	return arvB;
+}
+
+pBTree criaPagina(int ordem){
+	int  i;
+	pBTree arvB = (pBTree)malloc(sizeof(BTree));
+
+	arvB->chave = (char**)malloc(sizeof(char*) * ordem-1);
+	for (i = 0; i < ordem; ++i){
+		arvB->chave[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
+	}
+	arvB->filhos = (pBTree*)malloc(sizeof(pBTree) * ordem);
+	for (i = 0; i < ordem; ++i){
+		arvB->filhos[i] = NULL;
+	}
+	arvB->ordem = ordem;
+	arvB->n_chaves = 0;
+
 	arvB->pai = NULL;
 	
 	return arvB;
@@ -115,7 +135,7 @@ pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem){
 	return arvB;
 }
 
-pBTree insereAB_sec(pBTree raiz, char* chave){
+/*pBTree insereAB_sec(pBTree raiz, char* chave){
 	int i, index, novo_n, j;
 	char promotedKey[10];
 	pBTree filho, nova_raiz, pont;
@@ -225,7 +245,7 @@ pBTree insereAB_sec(pBTree raiz, char* chave){
 		}
 	}
 
-}
+}*/
 
 
 //modificar para tb adicionar ponteiros
@@ -235,9 +255,9 @@ pBTree create (char **temp, pBTree *filhos, int ini, int fim, int ordem) {
 	
 	for (i = ini, j = 0; i < fim; i++, j++) {
 		strcpy(filho->chave[j], temp[i]);
-		filho->filho[j] = filhos[i];
+		filho->filhos[j] = filhos[i];
 	}
-	filhos->filhos[j] = filhos[fim];
+	filho->filhos[j] = filhos[fim];
 	filho->n_chaves = j;
 	
 	return filho;
@@ -291,6 +311,9 @@ char *insereAB_v2(pBTree raiz, char* chave){
 					strcpy(temp1[i], raiz->chave[i]);
 				}
 				
+				for (i = 0; i < raiz->ordem; ++i){
+					free(temp[i]);
+				}
 				free(temp); //ja usei subiu
 				
 				pBTree *filhos1 = (pBTree*)malloc(sizeof(pBTree) * raiz->ordem + 1);
@@ -301,14 +324,10 @@ char *insereAB_v2(pBTree raiz, char* chave){
 				for (i = raiz->ordem; i > ind + 1; i--) {
 					filhos1[i] = raiz->filhos[i - 1];
 				}
-				filhos1[ind + 1] = filhos2;
+				filhos1[ind + 1] = filho2;
 				for (i = ind; i >= 0; i--) {
 					filhos1[i] = raiz->filhos[i];
 				}
-				
-				//INACABADO
-				//TODO: atualizar raiz e criar nova raiz
-				//subir um nível
 			
 				char *sobe = temp[raiz->ordem / 2];
 				
@@ -326,17 +345,20 @@ char *insereAB_v2(pBTree raiz, char* chave){
 					strcpy(new_raiz->chave[j], temp[i]);
 					new_raiz->filhos[j + 1] = filhos1[i];
 				}
-				new_raiz->filhos[0] = filhos2;
+				new_raiz->filhos[0] = filho2;
 				new_raiz->n_chaves = raiz->ordem / 2;
 				
 				if (raiz == raiz->pai) {
 					//aumenta o tamanho
 					pBTree new_pai = criaArvoreB(raiz->ordem);
-					strcpy(new_pai->chaves[0], subiu);
-					new_pai->filho[0] = raiz;
-					new_pai->filho[1] = new_raiz;
+					strcpy(new_pai->chave[0], subiu);
+					new_pai->filhos[0] = raiz;
+					new_pai->filhos[1] = new_raiz;
 					
 					atualizapai(new_pai, new_pai);
+					
+					filho2 = NULL;
+					return NULL;
 				} else {
 					//cria outra coisa temporaria
 					filho2 = new_raiz;
@@ -356,7 +378,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			return NULL;
 		} else {
 			temp = (char**) malloc(sizeof(char*) * raiz->ordem);
-			for (i = 0; i < ordem; ++i){
+			for (i = 0; i < raiz->ordem; ++i){
 				temp[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
 			}
 			
@@ -369,7 +391,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			}
 			
 			
-			filhos = (pBTree*)malloc(sizeof(pBTree) * raiz->ordem + 1);
+			pBTree *filhos = (pBTree*)malloc(sizeof(pBTree) * raiz->ordem + 1);
 			for (i = 0; i < raiz->ordem + 1; ++i){
 				filhos[i] = NULL;
 			}
@@ -387,6 +409,12 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			return sobe;
 		}
 	}
+}
+
+pBTree insereAB_helper(pBTree raiz, char *chave) {
+	insereAB_v2(raiz, chave);
+	
+	return raiz->pai;
 }
 
 void insereAB_rec(pBTree raiz, char* chave){
