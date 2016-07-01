@@ -520,7 +520,7 @@ void escreveABarq(FILE *fp, pBTree arvB){
 	fwrite(arvB, sizeof(BTree), 1, fp);
 
 	for (i = 0; i < arvB->n_chaves; i++){
-		fwrite(arvB->chave[i], sizeof(char), 1, fp);
+		fwrite(arvB->chave[i], sizeof(char), TAM_CHAVE, fp);
 		printf("Escrita: %s\n", arvB->chave[i]);
 	}
 
@@ -544,11 +544,9 @@ void leituraABarq(FILE *fp, pBTree arvB){
 	fread(arvB, sizeof(BTree), 1, fp);
 
 	for (i = 0; i < arvB->n_chaves; ++i){
-		for (j = 0; j < TAM_CHAVE; ++j){
-			fread(chave[j], sizeof(char), 1, fp);
-		}
+		fread(chave, sizeof(char), TAM_CHAVE, fp);
+		printf("chave escrita:%s\n", chave);
 		strcpy(arvB->chave[i], chave);
-		//printf("chave escrita:%s\n", arvB->chave[i]);
 	}
 
 	for(i = 0 ; i <= arvB->ordem ; i++){
