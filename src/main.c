@@ -30,25 +30,12 @@ int main(int agrc, char** argv){
 	//insereAB(&arvB, getKey(IP, 4));
 	//insereAB(&arvB, getKey(IP, 5));
 	
-	printf("0\n");
 	arvB = insereAB_helper(arvB, getKey(IP, 0));
-	inOrder(arvB);
-	printf("1\n");
 	arvB = insereAB_helper(arvB, getKey(IP, 1));
-	inOrder(arvB);
-	printf("2\n");
 	arvB = insereAB_helper(arvB, getKey(IP, 2));
-	inOrder(arvB);
-	printf("3\n");
 	arvB = insereAB_helper(arvB, getKey(IP, 3));
-	inOrder(arvB);
-	printf("4\n");
 	arvB = insereAB_helper(arvB, getKey(IP, 4));
-	inOrder(arvB);
-	printf("5\n");
 	arvB = insereAB_helper(arvB, getKey(IP, 5));
-	inOrder(arvB);
-	printf("6\n");
 	// arvB = insereAB(arvB, getKey(IP, 6));
 	inOrder(arvB);
 

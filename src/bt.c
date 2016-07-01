@@ -271,7 +271,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 	int ind = binary_search(chave, raiz->chave, raiz->n_chaves);
 	int i;
 	
-	printf("%p %d\n", raiz, ind);
+	//printf("%p %d\n", raiz, ind);
 
 	if (ind < raiz->ordem && !strcmp(raiz->chave[ind], chave)) {
 		printf("CHAVE JÁ EXISTENTE\n");
@@ -280,27 +280,30 @@ char *insereAB_v2(pBTree raiz, char* chave){
 		if (raiz->filhos[ind] != NULL) {
 			char *subiu = insereAB_v2(raiz->filhos[ind], chave);
 			
-			printf("SUBIU %s\n", subiu);
+			//printf("SUBIU %s\n", subiu);
 			
 			if (subiu == NULL)
 				return NULL;
 			
 			if (raiz->n_chaves < raiz->ordem - 1) {
 				//somente adiciona
-				raiz->filhos[raiz->n_chaves + 1] = raiz->filhos[raiz->n_chaves];
+				
 				int i;
+				
 				for (i = raiz->n_chaves; i > ind; i--) {
 					strcpy(raiz->chave[i], raiz->chave[i - 1]);
-					raiz->filhos[i] = raiz->filhos[i - 1];
+					raiz->filhos[i + 1] = raiz->filhos[i];
 				}
 				strcpy(raiz->chave[ind], subiu);
-				raiz->filhos[ind] = filho2;
+				raiz->filhos[ind + 1] = filho2;
 				
 				for (i = 0; i < raiz->ordem; ++i){
 					free(temp[i]);
 				}
 				free(temp);
 				filho2 = NULL;
+				
+				raiz->n_chaves++;
 				
 				return NULL;
 			} else {
@@ -428,7 +431,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			
 			
 			if (raiz == raiz->pai) {
-				printf("Cheguei\n");
+				//printf("Cheguei\n");
 				
 				//aumenta o tamanho
 				pBTree new_pai = criaArvoreB(raiz->ordem);
@@ -459,7 +462,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 
 pBTree insereAB_helper(pBTree raiz, char *chave) {
 	insereAB_v2(raiz, chave);
-	printf("%p %p\n", raiz, raiz->pai);
+	//printf("%p %p\n", raiz, raiz->pai);
 	
 	return raiz->pai;
 }
