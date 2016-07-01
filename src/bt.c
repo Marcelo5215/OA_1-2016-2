@@ -36,9 +36,10 @@ pBTree criaArvoreB(int ordem){
 		arvB->filhos[i] = NULL;
 	}
 	arvB->ordem = ordem;
-	arvB ->pai = NULL;
 	arvB->n_chaves = 0;
 
+	arvB->pai = arvB;
+	
 	return arvB;
 }
 
@@ -51,9 +52,14 @@ pBTree criaPagina(int ordem){
 		arvB->chave[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
 	}
 	arvB->filhos = (pBTree*)malloc(sizeof(pBTree) * ordem);
+	for (i = 0; i < ordem; ++i){
+		arvB->filhos[i] = NULL;
+	}
 	arvB->ordem = ordem;
 	arvB->n_chaves = 0;
 
+	arvB->pai = NULL; //diferenca entre cria ArvoreB e criaPagina
+	
 	return arvB;
 }
 
@@ -251,80 +257,82 @@ pBTree insereAB_sec(pBTree raiz, char* chave){
 			return nova_raiz;			
 		}
 	}
+
 }
 
-// char *insereAB_v2(pBTree raiz, char* chave){
+
+char *insereAB_v2(pBTree raiz, char* chave){
 	
-// 	static char **temp;
-// 	static pBTree filho2;
-// 	int ind = binary_search(chave, raiz->chave, raiz->ordem);
-// 	int i;
+	static char **temp;
+	static pBTree filho2;
+	int ind = binary_search(chave, raiz->chave, raiz->ordem);
+	int i;
 
-// 	if (ind < raiz->ordem && !strcmp(raiz->chave[ind], chave)) {
-// 		printf("CHAVE JÁ EXISTENTE\n");
-// 		return NULL;
-// 	} else {
-// 		if (raiz->filhos[ind] != NULL) {
-// 			char *subiu = insereAB_v2(raiz->filhos[ind], chave);
+	if (ind < raiz->ordem && !strcmp(raiz->chave[ind], chave)) {
+		printf("CHAVE JÁ EXISTENTE\n");
+		return NULL;
+	} else {
+		if (raiz->filhos[ind] != NULL) {
+			char *subiu = insereAB_v2(raiz->filhos[ind], chave);
 			
-// 			if (subiu == NULL)
-// 				return NULL;
+			if (subiu == NULL)
+				return NULL;
 			
-// 			if (raiz->n_chaves < raiz->ordem - 1) {
-// 				//somente adiciona
-// 				raiz->filhos[raiz->n_chaves + 1] = raiz->filhos[raiz->n_chaves];
-
-// 				for (i = raiz->n_chaves; i > ind; i--) {
-// 					strcpy(raiz->chave[i], raiz->chave[i - 1]);
-// 					raiz->filhos[i] = raiz->filhos[i - 1];
-// 				}
-// 				strcpy(raiz->chave[ind], sobe);
-// 				raiz->filhos[ind] = filho2;
+			if (raiz->n_chaves < raiz->ordem - 1) {
+				//somente adiciona
+				raiz->filhos[raiz->n_chaves + 1] = raiz->filhos[raiz->n_chaves];
+				int i;
+				for (i = raiz->n_chaves; i > ind; i--) {
+					strcpy(raiz->chave[i], raiz->chave[i - 1]);
+					raiz->filhos[i] = raiz->filhos[i - 1];
+				}
+				strcpy(raiz->chave[ind], subiu);
+				raiz->filhos[ind] = filho2;
 				
-// 				for (i = 0; i < raiz->ordem; ++i){
-// 					free(temp[i]);
-// 				}
-// 				free(temp);
-// 				return NULL;
-// 			} else {
-// 				if (raiz == raiz->pai) {
-// 					//aumenta o tamanho
-// 				} else {
-// 					//cria outra coisa temporaria
-// 				}
-// 			}
+				for (i = 0; i < raiz->ordem; ++i){
+					free(temp[i]);
+				}
+				free(temp);
+				return NULL;
+			} else {
+				if (raiz == raiz->pai) {
+					//aumenta o tamanho
+				} else {
+					//cria outra coisa temporaria
+				}
+			}
 			
-// 		} else if (raiz->n_chaves < raiz->ordem - 1) {
+		} else if (raiz->n_chaves < raiz->ordem - 1) {
 		
-// 			for (i = raiz->n_chaves; ind < i; i--) {
-// 				strcpy(raiz->chave[i], raiz->chave[i - 1]);
-// 			}
-// 			strcpy(raiz->chave[ind], chave);
-// 			raiz->n_chaves++;
-// 			return NULL;
-// 		} else {
-// 			temp = (char**) malloc(sizeof(char*) * raiz->ordem);
-// 			for (i = 0; i < raiz->ordem; ++i){
-// 				temp[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
-// 			}
+			for (i = raiz->n_chaves; ind < i; i--) {
+				strcpy(raiz->chave[i], raiz->chave[i - 1]);
+			}
+			strcpy(raiz->chave[ind], chave);
+			raiz->n_chaves++;
+			return NULL;
+		} else {
+			temp = (char**) malloc(sizeof(char*) * raiz->ordem);
+			for (i = 0; i < raiz->ordem; ++i){
+				temp[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
+			}
 			
-// 			for (i = raiz->ordem; ind < i; i--) {
-// 				strcpy(temp[i], raiz->chave[i - 1]);
-// 			}
-// 			for (i = ind; i >= 0; i--) {
-// 				strcpy(temp[i], raiz->chave[i]);
-// 			}
+			for (i = raiz->ordem; ind < i; i--) {
+				strcpy(temp[i], raiz->chave[i - 1]);
+			}
+			for (i = ind; i >= 0; i--) {
+				strcpy(temp[i], raiz->chave[i]);
+			}
 			
-// 			char *sobe = temp[raiz->ordem / 2];
+			char *sobe = temp[raiz->ordem / 2];
 			
-// 			raiz->n_chaves = raiz->ordem / 2;
+			raiz->n_chaves = raiz->ordem / 2;
 			
-// 			filho2 = create(temp, raiz->ordem / 2 + 1, raiz->ordem, raiz->ordem);
+			filho2 = create(temp, raiz->ordem / 2 + 1, raiz->ordem, raiz->ordem);
 			
-// 			return sobe;
-// 		}
-// 	}
-// }
+			return sobe;
+		}
+	}
+}
 
 pBTree insereAB(pBTree raiz, char* chave){
 	int i, index, novo_n, j;
