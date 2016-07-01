@@ -280,11 +280,11 @@ char *insereAB_v2(pBTree raiz, char* chave){
 				
 				return NULL;
 			} else {
-				char **temp1 = (char**) malloc(sizeof(char*) * raiz->n_chaves + 1);
-				for (i = 0; i < raiz->n_chaves + 1; ++i){
+				char **temp1 = (char**) malloc(sizeof(char*) * raiz->ordem);
+				for (i = 0; i < raiz->ordem; ++i){
 					temp1[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
 				}
-				for (i = raiz->n_chaves; ind < i; i--) {
+				for (i = raiz->ordem - 1; ind < i; i--) {
 					strcpy(temp[i], raiz->chave[i - 1]);
 				}
 				strcpy(temp[ind], subiu);
@@ -293,12 +293,12 @@ char *insereAB_v2(pBTree raiz, char* chave){
 				}
 				
 				
-				filhos1 = (pBTree*)malloc(sizeof(pBTree) * raiz->n_chaves + 2);
-				for (i = 0; i < raiz->n_chaves + 2; ++i){
+				filhos1 = (pBTree*)malloc(sizeof(pBTree) * raiz->ordem + 1);
+				for (i = 0; i < raiz->ordem + 1; ++i){
 					filhos1[i] = NULL;
 				}
 				
-				for (i = raiz->n_chaves + 1; i > ind + 1; i--) {
+				for (i = raiz->ordem; i > ind + 1; i--) {
 					filhos1[i] = raiz->filhos[i - 1];
 				}
 				filhos1[ind + 1] = filhos2;
@@ -312,12 +312,22 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			
 				char *sobe = temp[raiz->ordem / 2];
 				
-				for (i = raiz->ordem / 2 + 1; i < raiz->n_chaves; i++) {
-					free(raiz->chave[i]);
+				for (i = 0; i < raiz->ordem / 2; i++) {
+					strcpy(raiz->chave[i], temp[i]);
+					raiz->filhos[i] = filhos1[i];
 				}
+				raiz->filhos[i] = filhos1[i];
 				raiz->n_chaves = raiz->ordem / 2;
 				
-				pBTree = criaPagina(raiz->ordem);
+				pBTree new_raiz = criaPagina(raiz->ordem);
+				
+				int j;
+				for (i = raiz->ordem / 2 + 1, j = 0; i < raiz->ordem; i++, j++) {
+					strcpy(new_raiz->chave[j], temp[i]);
+					new_raiz->filhos[j + 1] = filhos1[i];
+				}
+				new_raiz->filhos0i] = filhos2;
+				new_raiz->n_chaves = raiz->ordem / 2;
 				
 				if (raiz == raiz->pai) {
 					pBTree new_pai = criaArvoreB(raiz->ordem);
@@ -358,8 +368,8 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			
 			char *sobe = temp[raiz->ordem / 2];
 			
-			for (i = raiz->ordem / 2 + 1; i < raiz->n_chaves; i++) {
-				free(raiz->chave[i]);
+			for (i = 0; i < raiz->ordem / 2; i++) {
+				strcpy(raiz->chave[i], temp[i]);
 			}
 			raiz->n_chaves = raiz->ordem / 2;
 			
