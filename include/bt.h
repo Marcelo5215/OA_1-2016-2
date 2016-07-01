@@ -29,7 +29,7 @@
 	pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem);
 	pBTree buscaAB(pBTree raiz, int *ind ,char* chave);
 	pBTree insereAB(pBTree raiz, char* chave);
-	pBTree buscaDir(pBTree raiz, char *chave, pBTree raizFilho);
+	pBTree buscaDir(pBTree raiz, char *chave);
 	void inOrder(pBTree raiz);
 	int insere(pBTree local, char* chave);
 

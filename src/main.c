@@ -22,10 +22,14 @@ int main(int agrc, char** argv){
 	IP = criaIndicePrimario("lista.txt");
 	imprimeIndicePrimario(IP);
 
-	pBTree arvB = criaArvoreB(4);
-	insereAB(arvB, getKey(IP, 0));
-	insereAB(arvB, getKey(IP, 1));
-	insereAB(arvB, getKey(IP, 2));
+	pBTree arvB = criaArvoreB(3);
+	arvB = insereAB(arvB, getKey(IP, 0));
+	arvB = insereAB(arvB, getKey(IP, 1));
+	arvB = insereAB(arvB, getKey(IP, 2));
+	arvB = insereAB(arvB, getKey(IP, 3));
+	arvB = insereAB(arvB, getKey(IP, 4));
+	arvB = insereAB(arvB, getKey(IP, 5));
+	arvB = insereAB(arvB, getKey(IP, 6));
 	inOrder(arvB);
 
 	//escrita
@@ -34,7 +38,7 @@ int main(int agrc, char** argv){
 	fclose(w);
 
 	printf("LEITURA:  \n");
-	pBTree arv = NULL;
+	pBTree arv = criaArvoreB(3);
 	FILE *e = fopen("saida.bt", "rb");
 	leituraABarq(e, arv);
 	inOrder(arv);
