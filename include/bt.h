@@ -13,6 +13,7 @@
 	typedef struct BTree{
 		char **chave;
 		pBTree *filhos;
+		pBTree pai;
 		int n_chaves, ordem; 
 	}BTree;
 
@@ -31,5 +32,8 @@
 	pBTree buscaDir(pBTree raiz, char *chave, pBTree raizFilho);
 	void inOrder(pBTree raiz);
 	int insere(pBTree local, char* chave);
+
+	void escreveABarq(FILE *fp, pBTree arvB);
+	void leituraABarq(FILE *fp, pBTree arvB);
 
 #endif
