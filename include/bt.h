@@ -28,7 +28,7 @@
 		ARVB_ERR,
 	}arvB_ret;
 
-	pBTree criaArvoreB(int ordem);
+	pTree criaArvoreB(int ordem);
 	pBTree criaPagina(int ordem);
 	arvB_ret limpaArvoreB(pBTree arvB);
 	pBTree criaFilho(char* chave, int ordem);
