@@ -650,39 +650,59 @@ void escreveABarq(FILE *fp, pBTree arvB){
 		return;
 	}
 	int i, j;
-	fwrite(arvB, sizeof(BTree), 1, fp);
+	
+	char flag = 'r';
+	if (arvB->filhos[0] == NULL) {
+		flag = 'f';
+	}
+	
+	fwrite(&flag, sizeof(char), 1, fp);
+	fwrite(&arvB->ordem, sizeof(int), 1, fp);
+	fwrite(&arvB->n_chaves, sizeof(int), 1, fp);
 
 	for (i = 0; i < arvB->n_chaves; i++){
 		fwrite(arvB->chave[i], sizeof(char), TAM_CHAVE, fp);
 	}
 
-	for(i = 0 ; i < arvB->ordem ; i++){
-		escreveABarq(fp, arvB->filhos[i]);
+	if (flag == 'r') {
+		for(i = 0 ; i <= arvB->n_chaves; i++){
+			escreveABarq(fp, arvB->filhos[i]);
+		}
 	}
 
 	return;
 }
 
-void leituraABarq(FILE *fp, pBTree arvB){
+pBTree leituraABarq(FILE *fp, pBTree arvB){
 	if (fp == NULL || feof(fp) != 0){
-		return;
+		return NULL;
 	}
-	else if(arvB == NULL){
-		arvB = (pBTree)malloc(sizeof(BTree));
-	}
+	int ordem;
+	
+	char flag;
 	char chave[TAM_CHAVE];
 	int i, j;
 
-	fread(arvB, sizeof(BTree), 1, fp);
+	fread(&flag, sizeof(char), 1, fp);
+	fread(&ordem, sizeof(int), 1, fp);
+	
+	if (arvB == NULL) {
+		arvB = criaArvoreB(ordem);
+	}
+	
+	fread(&arvB->n_chaves, sizeof(int), 1, fp);
 
 	for (i = 0; i < arvB->n_chaves; ++i){
 		fread(chave, sizeof(char), TAM_CHAVE, fp);
 		strcpy(arvB->chave[i], chave);
 	}
 
-	for(i = 0 ; i <= arvB->ordem ; i++){
-		leituraABarq(fp, arvB->filhos[i]);
+	if (flag == 'r') {
+		for(i = 0 ; i <= arvB->n_chaves ; i++){
+			pBTree ret = leituraABarq(fp, NULL);
+			arvB->filhos[i] = ret;
+		}
 	}
 	
-	return;
+	return arvB;
 }

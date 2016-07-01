@@ -35,6 +35,6 @@
 	int insere(pBTree local, char* chave);
 
 	void escreveABarq(FILE *fp, pBTree arvB);
-	void leituraABarq(FILE *fp, pBTree arvB);
+	pBTree leituraABarq(FILE *fp, pBTree arvB);
 
 #endif

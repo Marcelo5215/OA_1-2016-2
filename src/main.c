@@ -45,9 +45,9 @@ int main(int agrc, char** argv){
 	fclose(w);
 
 	printf("LEITURA:  \n");
-	pBTree arv = criaArvoreB(3);
+// 	pBTree arv = criaArvoreB(3);
 	FILE *e = fopen("saida.bt", "rb");
-	leituraABarq(e, arv);
+	pBTree arv = leituraABarq(e, arv);
 	inOrder(arv);
 	fclose(e);
 
