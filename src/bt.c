@@ -268,10 +268,10 @@ char *insereAB_v2(pBTree raiz, char* chave){
 	
 	static char **temp;
 	static pBTree filho2;
-	int ind = binary_search(chave, raiz->chave, raiz->ordem);
+	int ind = binary_search(chave, raiz->chave, raiz->n_chaves);
 	int i;
 	
-	//printf("%p %d\n", raiz, ind);
+	printf("%p %d\n", raiz, ind);
 
 	if (ind < raiz->ordem && !strcmp(raiz->chave[ind], chave)) {
 		printf("CHAVE JÁ EXISTENTE\n");
