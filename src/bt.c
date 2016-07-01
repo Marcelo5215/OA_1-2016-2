@@ -70,6 +70,7 @@ arvB_ret atualizapai(pBTree arvB, pBTree pai){
 	}
 	int i;
 	
+	//printf("atualiza %p\n", arvB);
 	arvB->pai = pai;
 
 	for (i = 0; i < arvB->ordem ; ++i){
@@ -270,7 +271,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 	int ind = binary_search(chave, raiz->chave, raiz->ordem);
 	int i;
 	
-	printf("%p %d\n", raiz, ind);
+	//printf("%p %d\n", raiz, ind);
 
 	if (ind < raiz->ordem && !strcmp(raiz->chave[ind], chave)) {
 		printf("CHAVE JÁ EXISTENTE\n");
@@ -278,6 +279,8 @@ char *insereAB_v2(pBTree raiz, char* chave){
 	} else {
 		if (raiz->filhos[ind] != NULL) {
 			char *subiu = insereAB_v2(raiz->filhos[ind], chave);
+			
+			printf("SUBIU %s\n", subiu);
 			
 			if (subiu == NULL)
 				return NULL;
@@ -353,13 +356,15 @@ char *insereAB_v2(pBTree raiz, char* chave){
 				if (raiz == raiz->pai) {
 					//aumenta o tamanho
 					pBTree new_pai = criaArvoreB(raiz->ordem);
-					strcpy(new_pai->chave[0], subiu);
+					strcpy(new_pai->chave[0], sobe);
 					new_pai->filhos[0] = raiz;
 					new_pai->filhos[1] = new_raiz;
 					
 					atualizapai(new_pai, new_pai);
 					
 					filho2 = NULL;
+					
+					new_pai->n_chaves = 1;
 					return NULL;
 				} else {
 					//cria outra coisa temporaria
@@ -391,10 +396,10 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			for (i = ind - 1; i >= 0; i--) {
 				strcpy(temp[i], raiz->chave[i]);
 			}
-			for (i = 0; i < raiz->ordem; ++i){
-				printf("%s\t", temp[1]);
+			/*for (i = 0; i < raiz->ordem; ++i){
+				printf("%s\t", temp[i]);
 			}
-			printf("\n");
+			printf("\n");*/
 			
 			pBTree *filhos = (pBTree*)malloc(sizeof(pBTree) * raiz->ordem + 1);
 			for (i = 0; i < raiz->ordem + 1; ++i){
@@ -408,8 +413,44 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			}
 			raiz->n_chaves = raiz->ordem / 2;
 			
+			/*for (i = 0; i < raiz->n_chaves; ++i){
+				printf("%s\t", raiz->chave[i]);
+			}
+			printf("\n");*/
+			
 			filho2 = create(temp, filhos, raiz->ordem / 2 + 1, raiz->ordem, raiz->ordem);
+			
+			/*for (i = 0; i < filho2->n_chaves; ++i){
+				printf("%s\t", filho2->chave[i]);
+			}
+			printf("\n");*/
 			filho2->pai = raiz->pai;
+			
+			
+			if (raiz == raiz->pai) {
+				printf("Cheguei\n");
+				
+				//aumenta o tamanho
+				pBTree new_pai = criaArvoreB(raiz->ordem);
+				strcpy(new_pai->chave[0], sobe);
+				new_pai->filhos[0] = raiz;
+				new_pai->filhos[1] = filho2;
+				
+				atualizapai(new_pai, new_pai);
+				
+				for (i = 0; i < raiz->ordem; ++i){
+					free(temp[i]);
+				}
+				free(temp);
+				filho2 = NULL;
+				
+				new_pai->n_chaves = 1;
+				
+				return NULL;
+			} else {
+				
+				return sobe;
+			}
 			
 			return sobe;
 		}
@@ -418,6 +459,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 
 pBTree insereAB_helper(pBTree raiz, char *chave) {
 	insereAB_v2(raiz, chave);
+	printf("%p %p\n", raiz, raiz->pai);
 	
 	return raiz->pai;
 }
