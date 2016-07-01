@@ -22,12 +22,30 @@ int main(int agrc, char** argv){
 	IP = criaIndicePrimario("lista.txt");
 	imprimeIndicePrimario(IP);
 
-	pBTree arvB = criaABIndicePrimario(IP, 6);
-
+	pBTree arvB = criaArvoreB(4);
+	insereAB(arvB, getKey(IP, 0));
+	insereAB(arvB, getKey(IP, 1));
+	insereAB(arvB, getKey(IP, 2));
 	inOrder(arvB);
+
+	//escrita
+	FILE *w = fopen("saida.bt", "wb");
+	escreveABarq(w, arvB);
+	fclose(w);
+
+	printf("LEITURA:  \n");
+	pBTree arv = NULL;
+	FILE *e = fopen("saida.bt", "rb");
+	leituraABarq(e, arv);
+	inOrder(arv);
+	fclose(e);
+
+
+
 
 	free(IP);
 	limpaArvoreB(arvB);
+	free(arv);
 
 
 

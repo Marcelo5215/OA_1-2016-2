@@ -71,7 +71,9 @@ arvB_ret limpaArvoreB(pBTree arvB){
 			break;
 		}
 	}
-	free(arvB->filhos);
+	if (arvB->filhos != NULL){
+		free(arvB->filhos);
+	}
 
 	free(arvB);
 
@@ -132,7 +134,7 @@ pBTree create (char **temp, int ini, int fim, int ordem) {
 	int i, j;
 	
 	for (i = ini, j = 0; i <= fim; i++, j++) {
-		strcpy(filho->chaves[j], temp[i]);
+		strcpy(filho->chave[j], temp[i]);
 	}
 	filho->n_chaves = j;
 	
@@ -143,9 +145,10 @@ char *insereAB_v2(pBTree raiz, char* chave){
 	
 	static char **temp;
 	static pBTree filho2;
-	int ind = binary_search(chave, raiz->chaves, raiz->ordem);
-	
-	if (ind < raiz->ordem && !strcmp(raiz->chaves[ind], chave)) {
+	int ind = binary_search(chave, raiz->chave, raiz->ordem);
+	int i;
+
+	if (ind < raiz->ordem && !strcmp(raiz->chave[ind], chave)) {
 		printf("CHAVE JÁ EXISTENTE\n");
 		return NULL;
 	} else {
@@ -162,20 +165,19 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			}
 			
 		} else if (raiz->n_chaves < raiz->ordem - 1) {
-			int i;
-			
-			for (i = n_chaves; ind < i; i--) {
-				strcpy(raiz->chaves[i], raiz->chaves[i - 1]);
+		
+			for (i = raiz->n_chaves; ind < i; i--) {
+				strcpy(raiz->chave[i], raiz->chave[i - 1]);
 			}
 			return NULL;
 		} else {
 			temp = (char**) malloc(sizeof(char*) * raiz->ordem);
 			
 			for (i = raiz->ordem; ind < i; i--) {
-				strcpy(temp[i], raiz->chaves[i - 1]);
+				strcpy(temp[i], raiz->chave[i - 1]);
 			}
 			for (i = ind; i >= 0; i--) {
-				strcpy(temp[i], raiz->chaves[i]);
+				strcpy(temp[i], raiz->chave[i]);
 			}
 			
 			char *sobe = temp[raiz->ordem / 2];
@@ -344,12 +346,13 @@ void escreveABarq(FILE *fp, pBTree arvB){
 		return;
 	}
 	int i, j;
-
-	fwrite((*arvB), sizeof(BTree), 1, fp);
+	// printf("DENTRO:\n\n");
+	// inOrder(arvB);
+	fwrite(arvB, sizeof(BTree), 1, fp);
 
 	for (i = 0; i < arvB->n_chaves; ++i){
 		for (j = 0; j < TAM_CHAVE; ++j){
-			fwrite(chave[i][j], sizeof(char), 1, fp);
+			fwrite(arvB->chave[i], sizeof(char), TAM_CHAVE, fp);
 		}
 	}
 
@@ -364,6 +367,9 @@ void leituraABarq(FILE *fp, pBTree arvB){
 	if (fp == NULL || feof(fp) != 0){
 		return;
 	}
+	else if(arvB == NULL){
+		arvB = (pBTree)malloc(sizeof(BTree));
+	}
 	char chave[TAM_CHAVE];
 	int i, j;
 
@@ -371,13 +377,15 @@ void leituraABarq(FILE *fp, pBTree arvB){
 
 	for (i = 0; i < arvB->n_chaves; ++i){
 		for (j = 0; j < TAM_CHAVE; ++j){
-			fread(chave[i][j], sizeof(char), 1, fp);
+			fread(chave, sizeof(char), TAM_CHAVE, fp);
 		}
+		strcpy(arvB->chave[i], chave);
+		printf("chave escrita:%s\n", arvB->chave[i]);
 	}
 
 	for(i = 0 ; i <= arvB->ordem ; i++){
 		leituraABarq(fp, arvB->filhos[i]);
 	}
 	
-	return
+	return;
 }
