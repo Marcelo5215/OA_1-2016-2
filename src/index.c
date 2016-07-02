@@ -151,7 +151,9 @@ void ordenaIndicePrimario(tabelaInd_Prim *ind, int esquerda, int direita){
 char *getRegistroPrimario(FILE *fp, long int byte_offset){
 	static char saida[64];
 	fseek(fp, byte_offset, SEEK_SET);
-	fscanf(fp,"%[^\n]\n", saida);
+	if (fscanf(fp,"%[^\n]\n", saida)<0){
+		printf("ERRO no arquivo\n");
+	}
 
 	return saida;
 }
@@ -175,7 +177,9 @@ int findRegistroPrimario(char *nomeArq, tabelaInd_Prim *ind, char *chave_primari
 		
 		if (strcmp(ind->vet_ind[meio].key, chave_primaria) == 0) {
 			fseek(fp, ind->vet_ind[meio].byte_offset, SEEK_SET);
-			fscanf(fp, "%[^\n]\n", string);
+			if (fscanf(fp, "%[^\n]\n", string) < 0){
+				printf("ERRO no arquivo\n");
+			}
 			printf("%s\n", string);
 			fclose(fp);
 			return meio;
@@ -188,7 +192,9 @@ int findRegistroPrimario(char *nomeArq, tabelaInd_Prim *ind, char *chave_primari
 	
 	if(i == j && strcmp(ind->vet_ind[j].key, chave_primaria) == 0) {
 		fseek(fp, ind->vet_ind[i].byte_offset, SEEK_SET);
-		fscanf(fp, "%[^\n]\n", string);
+		if (fscanf(fp, "%[^\n]\n", string) < 0){
+			printf("ERRO no arquivo\n");
+		}
 		printf("%s\n", string);
 		fclose(fp);
 		return i;

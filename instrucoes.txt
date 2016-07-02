@@ -1,0 +1,16 @@
+Trabalho de Organização de Arquivos
+
+Marcelo de Araujo Lopes Junior - 150016794
+Rafael de Lima Chehab - 150045123
+
+Arvore B
+	Não foi necessário implementar a remoção
+
+Instruções:
+
+	Vá a pasta src e utilize make, um executavel main deve ser gerado.
+
+	$ cd src/
+        $ make 
+	$ ./main
+

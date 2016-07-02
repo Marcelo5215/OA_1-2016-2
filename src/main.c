@@ -104,9 +104,6 @@ int main(int agrc, char** argv){
 				}
 				break;
 			case 8:
-				limpaArvoreB(arvoreB);
-				break;
-			case 9:
 				if(arvoreB == NULL){
 					printf("Crie uma arvore antes\n");
 					break;
@@ -127,7 +124,7 @@ int main(int agrc, char** argv){
 		printf("PRESSIONE ENTER\n");
 		getchar();
 	}
-	if (arvoreB != NULL){	
+	if (arvoreB == NULL){	
 		limpaArvoreB(arvoreB);
 	}
 	if (IP != NULL){	
@@ -152,8 +149,7 @@ void menu(){
 	printf("5. Vizualizar indice Primario\n");
 	printf("6. CRIAR arvore B a partir de indice\n");
 	printf("7. Realizar busca da arvore B\n");
-	printf("8. Limpa arvore\n");
-	printf("9. Vizualizar arvore com as paginas\n");
+	printf("8. Vizualizar arvore com as paginas\n");
 	printf("99. SAIR\n");
 
 	return;
