@@ -83,16 +83,24 @@ arvB_ret atualizapai(pBTree arvB, pBTree pai){
 }
 
 arvB_ret limpaArvoreB(pBTree arvB){
+	
+	static int nivel = 0;
+	
 	if(arvB == NULL){
+		nivel--;
 		return ARVB_ERR;
 	}
 	int i;
+	
+	//printf("%s %d\n", arvB->chave[0], nivel);
+	
 	for (i = 0; i < arvB->ordem -1; ++i){
 		free(arvB->chave[i]);
 	}
 	free(arvB->chave);
 
-	for (i = 0; i < arvB->ordem ; ++i){
+	for (i = 0; i <= arvB->n_chaves ; ++i){
+		nivel++;
 		if(limpaArvoreB(arvB->filhos[i]) == ARVB_ERR){
 			break;
 		}
@@ -103,6 +111,7 @@ arvB_ret limpaArvoreB(pBTree arvB){
 
 	free(arvB);
 
+	nivel--;
 	return ARVB_OK;
 }
 

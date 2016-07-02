@@ -124,10 +124,11 @@ int main(int agrc, char** argv){
 		printf("PRESSIONE ENTER\n");
 		getchar();
 	}
-	if (arvoreB == NULL){	
+
+	if (arvoreB == NULL){
 		limpaArvoreB(arvoreB);
 	}
-	if (IP != NULL){	
+	if (IP != NULL){
 		free(IP);
 	}
 	if (saida != NULL){
