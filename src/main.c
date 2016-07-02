@@ -12,67 +12,10 @@ RAFAEL DE LIMA CHEHAB - 150045123
 void menu();
 
 int main(int agrc, char** argv){
-
-// 	tabelaInd_Prim* IP = NULL;
-// 	char nomeArq[50], nomeArq2[50];
-
-// 	IP = criaIndicePrimario("lista.txt");
-// 	imprimeIndicePrimario(IP);
-
-// 	pBTree arvB = criaArvoreB(3);
-// 	//insereAB(&arvB, getKey(IP, 0));
-// 	//insereAB(&arvB, getKey(IP, 1));
-// 	//insereAB(&arvB, getKey(IP, 2));
-// 	//insereAB(&arvB, getKey(IP, 3));
-// 	//insereAB(&arvB, getKey(IP, 4));
-// 	//insereAB(&arvB, getKey(IP, 5));
-	
-// 	arvB = insereAB_helper(arvB, getKey(IP, 0));
-// 	arvB = insereAB_helper(arvB, getKey(IP, 1));
-// 	arvB = insereAB_helper(arvB, getKey(IP, 2));
-// 	arvB = insereAB_helper(arvB, getKey(IP, 3));
-// 	arvB = insereAB_helper(arvB, getKey(IP, 4));
-// 	arvB = insereAB_helper(arvB, getKey(IP, 5));
-// 	// arvB = insereAB(arvB, getKey(IP, 6));
-// 	inOrder(arvB);
-
-// 	//escrita
-// 	FILE *w = fopen("saida.bt", "wb");
-// 	escreveABarq(w, arvB);
-// 	fclose(w);
-
-// 	printf("LEITURA:  \n");
-// // 	pBTree arv = criaArvoreB(3);
-// 	FILE *e = fopen("saida.bt", "rb");
-// 	pBTree arv = leituraABarq(e, arv);
-// 	inOrder(arv);
-// 	fclose(e);
-
-// 	int seeks;
-
-// 	if(buscaAB(arv, &seeks, getKey(IP, 0)) != NULL){
-// 		printf("seeks = %d\n", seeks);
-// 		seeks = 0;
-// 	}
-
-// 	if(buscaAB(arv, &seeks, getKey(IP, 1)) != NULL){
-// 		printf("seeks = %d\n", seeks);
-// 		seeks = 0;
-// 	}
-// 	if(buscaAB(arv, &seeks, getKey(IP, 3)) != NULL){
-// 		printf("seeks = %d\n", seeks);
-// 		seeks = 0;
-// 	}
-
-
-// 	free(IP);
-// 	limpaArvoreB(arvB);
-// 	//free(arv);
-
 	//rotinas
 	tabelaInd_Prim* IP = NULL;
 	pBTree arvoreB = NULL;
-	FILE *saida;
+	FILE *saida = NULL;
 
 	IP = NULL;
 	int op, ordem, seeks;
@@ -96,7 +39,7 @@ int main(int agrc, char** argv){
 					break;
 				}
 				arvoreB = criaArvoreB(ordem);
-				saida = fopen("saida.bt", "wb");
+				saida = fopen("indicelista.bt", "wb");
 				break;
 			case 3:
 				if (arvoreB == NULL){
@@ -132,11 +75,14 @@ int main(int agrc, char** argv){
 					printf("Digite a ordem da arvore: ");
 					scanf("%d", &ordem);
 					arvoreB = criaABIndicePrimario(IP, ordem);
+					saida = fopen("indicelista.bt", "wb");
+					escreveABarq(saida, arvoreB);
 				}
 				break;
 			case 7:
 				printf("Digite a chave no formato 3 primeiras Letras e 5 números\n");
 				scanf("%[^\n]", chave);
+				getchar();
 				if(buscaAB(arvoreB, &seeks, chave) != NULL){
 					printf("seeks = %d\n", seeks);
 					seeks = 0;
@@ -144,6 +90,17 @@ int main(int agrc, char** argv){
 				else{
 					printf("CHAVE NÃO EXISTE\n");
 				}
+				break;
+			case 8:
+				limpaArvoreB(arvoreB);
+				break;
+			case 9:
+				if(arvoreB == NULL){
+					printf("Crie uma arvore antes\n");
+					break;
+				}
+				printf("\n");
+				inOrder2(arvoreB);
 				break;
 			case 99:
 				break;
@@ -153,11 +110,11 @@ int main(int agrc, char** argv){
 				break;
 		}
 
-		printf("PRECIONE ENTER\n");
+		printf("PRESSIONE ENTER\n");
 		getchar();
 	}
-	if (arvoreB != NULL){	
-		limpaArvoreB(arvoreB);;
+	if (arvoreB == NULL){	
+		limpaArvoreB(arvoreB);
 	}
 	if (IP != NULL){	
 		free(IP);
@@ -179,6 +136,8 @@ void menu(){
 	printf("5. Vizualizar indice Primario\n");
 	printf("6. CRIAR arvore B a partir de indice\n");
 	printf("7. Realizar busca da arvore B\n");
+	printf("8. Limpa arvore\n");
+	printf("9. Vizualizar arvore com as paginas\n");
 	printf("99. SAIR\n");
 
 	return;

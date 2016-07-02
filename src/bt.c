@@ -519,6 +519,7 @@ void inOrder(pBTree raiz){
 	inOrder(raiz->filhos[i]);
 }
 
+//imprime de outro modo a arvore
 void inOrder2(pBTree raiz){
 	if(raiz == NULL){
 		return;
@@ -558,7 +559,7 @@ void escreveABarq(FILE *fp, pBTree arvB){
 	for (i = 0; i < arvB->n_chaves; i++){
 		fwrite(arvB->chave[i], sizeof(char), TAM_CHAVE, fp);
 	}
-
+	fflush(fp);
 	if (flag == 'r') {
 		for(i = 0 ; i <= arvB->n_chaves; i++){
 			escreveABarq(fp, arvB->filhos[i]);
