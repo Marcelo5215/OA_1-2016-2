@@ -131,7 +131,7 @@ int main(int agrc, char** argv){
 				else{
 					printf("Digite a ordem da arvore: ");
 					scanf("%d", &ordem);
-					criaABIndicePrimario(IP, ordem);
+					arvoreB = criaABIndicePrimario(IP, ordem);
 				}
 				break;
 			case 7:

@@ -129,7 +129,6 @@ pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem){
 	for (i = 0; i < ultimoElementoIndicePrimario(ind) ; ++i){
 		arvB = insereAB_helper(arvB, getKey(ind, i));
 	}
-
 	return arvB;
 }
 
@@ -155,19 +154,24 @@ char *insereAB_v2(pBTree raiz, char* chave){
 	int ind = binary_search(chave, raiz->chave, raiz->n_chaves);
 	int i;
 	
-	//printf("%p %d\n", raiz, ind);
+	printf("%p %d\n", raiz, ind);
 
 	if (ind < raiz->ordem && !strcmp(raiz->chave[ind], chave)) {
 		printf("CHAVE JÁ EXISTENTE\n");
 		return NULL;
 	} else {
 		if (raiz->filhos[ind] != NULL) {
-			char *subiu = insereAB_v2(raiz->filhos[ind], chave);
 			
-			//printf("SUBIU %s\n", subiu);
+			char *subiu = (char *) malloc(sizeof(char) * TAM_CHAVE);
 			
-			if (subiu == NULL)
+			char *p = insereAB_v2(raiz->filhos[ind], chave);
+			
+			printf("SUBIU %s\n", p);
+			
+			if (p == NULL)
 				return NULL;
+			
+			strcpy(subiu, p);
 			
 			if (raiz->n_chaves < raiz->ordem - 1) {
 				//somente adiciona
@@ -191,22 +195,21 @@ char *insereAB_v2(pBTree raiz, char* chave){
 				
 				return NULL;
 			} else {
-				char **temp1 = (char**) malloc(sizeof(char*) * raiz->ordem);
-				for (i = 0; i < raiz->ordem; ++i){
-					temp1[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
-				}
-				for (i = raiz->ordem - 1; ind < i; i--) {
-					strcpy(temp1[i], raiz->chave[i - 1]);
-				}
-				strcpy(temp1[ind], subiu);
-				for (i = ind - 1; i >= 0; i--) {
-					strcpy(temp1[i], raiz->chave[i]);
-				}
-				
 				for (i = 0; i < raiz->ordem; ++i){
 					free(temp[i]);
 				}
-				free(temp); //ja usei subiu
+				free(temp);
+				temp = (char**) malloc(sizeof(char*) * raiz->ordem);
+				for (i = 0; i < raiz->ordem; ++i){
+					temp[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
+				}
+				for (i = raiz->ordem - 1; ind < i; i--) {
+					strcpy(temp[i], raiz->chave[i - 1]);
+				}
+				strcpy(temp[ind], subiu);
+				for (i = ind - 1; i >= 0; i--) {
+					strcpy(temp[i], raiz->chave[i]);
+				}
 				
 				pBTree *filhos1 = (pBTree*)malloc(sizeof(pBTree) * raiz->ordem + 1);
 				for (i = 0; i < raiz->ordem + 1; ++i){
@@ -256,7 +259,6 @@ char *insereAB_v2(pBTree raiz, char* chave){
 				} else {
 					//cria outra coisa temporaria
 					filho2 = new_raiz;
-					temp = temp1;
 					
 					return sobe;
 				}
