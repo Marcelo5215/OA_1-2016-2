@@ -133,119 +133,6 @@ pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem){
 	return arvB;
 }
 
-/*pBTree insereAB_sec(pBTree raiz, char* chave){
-	int i, index, novo_n, j;
-	char promotedKey[10];
-	pBTree filho, nova_raiz, pont;
-
-	//se existir lugar na pagina raiz
-	if (raiz->n_chaves < raiz->ordem - 1){
-		insere(raiz, chave);
-		return raiz;
-	}
-	else{
-		//busca o nó folha onde o filho deveria ser inserido
-		filho = buscaDir(raiz, chave);
-		//se existir lugar no nó do filho
-		if (filho->n_chaves < filho->ordem - 1){
-			insere(filho, chave);
-			return raiz;
-		}
-		else{
-			//split
-			pBTree esq = raiz;
-			pBTree dir = criaArvoreB(raiz->ordem);
-			//copia metade das chaves do raiz para a esquerda(esq), eoutra metade para a direita(dir)
-			//e a chave no meio será a chave promovida 
-			novo_n = 0; 
-			strcpy(promotedKey, raiz->chave[raiz->n_chaves/2]);
-			for (i = 0; i < raiz->n_chaves/2; ++i){
-			  	strcpy(esq->chave[i], raiz->chave[i]);
-			  	novo_n++;
-			}
-			j = 0; 
-			for (i = raiz->n_chaves/2 + 1; i < raiz->n_chaves; ++i, j++){
-			  	strcpy(dir->chave[j], raiz->chave[i]);
-			  	dir->n_chaves++;
-			} 
-			raiz->n_chaves = novo_n;
-			//caso o pai exista e tenha vaga
-			if (raiz->pai != NULL && raiz->pai->n_chaves < raiz->pai->ordem -1){
-				index = insere(raiz->pai, raiz->chave[raiz->n_chaves/2]);
-				if(index > 0){
-					raiz->pai->filhos[index - 1] = esq;
-					raiz->pai->filhos[index] = dir;
-				}
-				else if (index == 0){
-					raiz->pai->filhos[0] = esq;
-					raiz->pai->filhos[1] = dir;
-				}
-				else{
-					raiz->pai->filhos[raiz->pai->ordem-1] = dir;
-					raiz->pai->filhos[raiz->pai->ordem-2] = esq;
-				}
-				return raiz->pai;
-			} //CASO NÃO TENHA VAGA
-			else if (raiz->pai != NULL){
-				nova_raiz = insereAB_sec(raiz->pai, promotedKey);
-				pBTree AUX = nova_raiz;
-				//busca pelo local onde o esquerdo deve ir
-				index = 0;
-				do{
-					i=0;
-					while(strcmp(AUX->chave[i], esq->chave[0]) < 0 && i < AUX->n_chaves){
-						i++;
-						index++;
-					}
-					AUX = AUX->filhos[index];
-				}while(AUX->filhos[0] != NULL);
-				i=0;
-				while(strcmp(AUX->chave[i], esq->chave[0]) < 0 && i < AUX->n_chaves){
-					i++;
-					index++;
-				}
-				esq->pai = AUX;
-				dir->pai = AUX;
-				if(index > 0){
-					AUX->filhos[index] = esq;
-					AUX->filhos[index + 1] = dir;
-				}
-				else if (index == 0){
-					AUX->filhos[0] = esq;
-					AUX->filhos[1] = dir;
-				}
-				else{
-					AUX->filhos[AUX->ordem-1] = dir;
-					AUX->filhos[AUX->ordem-2] = esq;
-				}
-
-				return nova_raiz;
-			}
-			//monta a nova raiz
-			nova_raiz = criaArvoreB(raiz->ordem);
-			index = insere(nova_raiz, promotedKey);
-			insere(dir, chave);
-			esq->pai = nova_raiz;
-			dir->pai = nova_raiz;
-			if(index > 0){
-				nova_raiz->filhos[index - 1] = esq;
-				nova_raiz->filhos[index] = dir;
-			}
-			else if (index == 0){
-				nova_raiz->filhos[0] = esq;
-				nova_raiz->filhos[1] = dir;
-			}
-			else{
-				nova_raiz->filhos[nova_raiz->ordem-1] = dir;
-				nova_raiz->filhos[nova_raiz->ordem-2] = esq;
-			}
-			return nova_raiz;			
-		}
-	}
-
-}*/
-
-
 //modificar para tb adicionar ponteiros
 pBTree create (char **temp, pBTree *filhos, int ini, int fim, int ordem) {
 	pBTree filho = criaArvoreB(ordem);
@@ -459,7 +346,6 @@ char *insereAB_v2(pBTree raiz, char* chave){
 
 pBTree insereAB_helper(pBTree raiz, char *chave) {
 	insereAB_v2(raiz, chave);
-	//printf("%p %p\n", raiz, raiz->pai);
 	
 	return raiz->pai;
 }
@@ -574,7 +460,6 @@ void limpaPagina(pBTree local){
 	}
 	free(local->chave);
 	free(local->filhos);
-	//free(local);
 }
 
 //insere de forma ordenada na pagina dada
@@ -610,22 +495,6 @@ int insere(pBTree local, char* chave){
 
 	return i;
 }
-
-// pBTree buscaDir(pBTree raiz, char *chave){
-// 	int i = 0;
-// 	int index = 0;
-// 	while(strcmp(raiz->chave[i], chave) < 0 && i < raiz->n_chaves){
-// 		i++;
-// 		index++;
-// 	}
-// 	if(i == raiz->n_chaves-1){
-// 		index++;
-// 	}
-// 	else if(raiz->filhos[index] == NULL){
-// 		return raiz;
-// 	}
-// 	return (buscaDir(raiz->filhos[index], chave));
-// }
 
 void inOrder(pBTree raiz){
 	if(raiz == NULL){

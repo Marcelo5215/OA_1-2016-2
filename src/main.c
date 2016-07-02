@@ -74,9 +74,8 @@ int main(int agrc, char** argv){
 	pBTree arvoreB = NULL;
 	FILE *saida;
 
-	IP = criaIndicePrimario("lista.txt");
-	imprimeIndicePrimario(IP);
-	int op, ordem;
+	IP = NULL;
+	int op, ordem, seeks;
 	char nome_arq[50], chave[10];
 	while(op != 99){
 		menu();
@@ -110,7 +109,7 @@ int main(int agrc, char** argv){
 				escreveABarq(saida, arvoreB);
 				break;
 			case 4:
-				if(arvoreB== NULL){
+				if(arvoreB == NULL){
 					printf("Crie uma arvore antes\n");
 					break;
 				}
@@ -136,10 +135,9 @@ int main(int agrc, char** argv){
 				}
 				break;
 			case 7:
-				int seeks; 
 				printf("Digite a chave no formato 3 primeiras Letras e 5 números\n");
 				scanf("%[^\n]", chave);
-				if(buscaAB(arv, &seeks, chave) != NULL){
+				if(buscaAB(arvoreB, &seeks, chave) != NULL){
 					printf("seeks = %d\n", seeks);
 					seeks = 0;
 				}
@@ -163,6 +161,9 @@ int main(int agrc, char** argv){
 	}
 	if (IP != NULL){	
 		free(IP);
+	}
+	if (saida != NULL){
+		fclose(saida);
 	}
 
 	return 0;
