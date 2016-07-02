@@ -32,6 +32,7 @@
 	pBTree insereAB_helper(pBTree raiz, char *chave);
 	pBTree buscaDir(pBTree raiz, char *chave);
 	void inOrder(pBTree raiz);
+	void inOrder2(pBTree raiz);
 	int insere(pBTree local, char* chave);
 
 	void escreveABarq(FILE *fp, pBTree arvB);

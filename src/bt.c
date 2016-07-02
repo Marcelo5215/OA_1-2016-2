@@ -126,8 +126,11 @@ pBTree buscaAB(pBTree raiz, int *seeks ,char* chave){
 pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem){
 	pBTree arvB = criaArvoreB(ordem);
 	int i;
+	//int a;
 	for (i = 0; i < ultimoElementoIndicePrimario(ind) ; ++i){
 		arvB = insereAB_helper(arvB, getKey(ind, i));
+		//inOrder2(arvB);
+		//scanf("%d", &a);
 	}
 	return arvB;
 }
@@ -154,7 +157,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 	int ind = binary_search(chave, raiz->chave, raiz->n_chaves);
 	int i;
 	
-	//printf("%p %d\n", raiz, ind);
+	printf("%p %d\n", raiz, ind);
 
 	if (ind < raiz->ordem && !strcmp(raiz->chave[ind], chave)) {
 		printf("CHAVE JÁ EXISTENTE\n");
@@ -166,7 +169,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 			
 			char *p = insereAB_v2(raiz->filhos[ind], chave);
 			
-			//printf("SUBIU %s\n", p);
+			printf("SUBIU %s %d\n", p, ind);
 			
 			if (p == NULL)
 				return NULL;
@@ -203,7 +206,7 @@ char *insereAB_v2(pBTree raiz, char* chave){
 				for (i = 0; i < raiz->ordem; ++i){
 					temp[i] = (char*)malloc(sizeof(char) * TAM_CHAVE);
 				}
-				for (i = raiz->ordem - 1; ind < i; i--) {
+				for (i = raiz->ordem - 1; i > ind; i--) {
 					strcpy(temp[i], raiz->chave[i - 1]);
 				}
 				strcpy(temp[ind], subiu);
@@ -238,10 +241,11 @@ char *insereAB_v2(pBTree raiz, char* chave){
 				int j;
 				for (i = raiz->ordem / 2 + 1, j = 0; i < raiz->ordem; i++, j++) {
 					strcpy(new_raiz->chave[j], temp[i]);
-					new_raiz->filhos[j + 1] = filhos1[i];
+					new_raiz->filhos[j] = filhos1[i];
 				}
-				new_raiz->filhos[0] = filho2;
-				new_raiz->n_chaves = raiz->ordem / 2;
+				new_raiz->filhos[j] = filhos1[i];
+				new_raiz->n_chaves = j;
+				
 				
 				if (raiz == raiz->pai) {
 					//aumenta o tamanho
@@ -348,6 +352,8 @@ char *insereAB_v2(pBTree raiz, char* chave){
 
 pBTree insereAB_helper(pBTree raiz, char *chave) {
 	insereAB_v2(raiz, chave);
+	
+	printf("%p %p\n", raiz, raiz->pai);
 	
 	return raiz->pai;
 }
@@ -511,6 +517,27 @@ void inOrder(pBTree raiz){
 		i++;
 	}
 	inOrder(raiz->filhos[i]);
+}
+
+void inOrder2(pBTree raiz){
+	if(raiz == NULL){
+		return;
+	}
+
+	int i = 0 ;
+	pBTree aux = raiz;
+	
+	while (i < raiz->n_chaves) {
+		printf("%s\t", raiz->chave[i]);
+		i++;
+	}
+	printf("\n");
+	
+	i = 0;
+	while(i <= raiz->n_chaves){
+		inOrder2(raiz->filhos[i]);
+		i++;
+	}
 }
 
 void escreveABarq(FILE *fp, pBTree arvB){
