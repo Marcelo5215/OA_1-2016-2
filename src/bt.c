@@ -125,12 +125,9 @@ pBTree buscaAB(pBTree raiz, int *seeks ,char* chave){
 
 pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem){
 	pBTree arvB = criaArvoreB(ordem);
-	char *chave;
 	int i;
 	for (i = 0; i < ultimoElementoIndicePrimario(ind) ; ++i){
-		chave = getKey(ind, i);
-		printf("%s\n", chave);
-		insereAB(&arvB, chave);
+		arvB = insereAB_helper(arvB, getKey(ind, i));
 	}
 
 	return arvB;
