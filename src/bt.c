@@ -23,7 +23,7 @@ int binary_search(char *key, char **chaves, int ordem) {
 	return ini;
 }
 
-
+//cria uma arvore B vazia
 pBTree criaArvoreB(int ordem){
 	int  i;
 	pBTree arvB = (pBTree)malloc(sizeof(BTree));
@@ -123,19 +123,18 @@ pBTree buscaAB(pBTree raiz, int *seeks ,char* chave){
 	return(buscaAB(raiz->filhos[index], seeks, chave));	
 }
 
+//cria a arvoreB baseada em um índice Primario
 pBTree criaABIndicePrimario(tabelaInd_Prim *ind, int ordem){
 	pBTree arvB = criaArvoreB(ordem);
 	int i;
 	//int a;
 	for (i = 0; i < ultimoElementoIndicePrimario(ind) ; ++i){
 		arvB = insereAB_helper(arvB, getKey(ind, i));
-		//inOrder2(arvB);
-		//scanf("%d", &a);
 	}
 	return arvB;
 }
 
-//modificar para tb adicionar ponteiros
+//Cria novos filhos
 pBTree create (char **temp, pBTree *filhos, int ini, int fim, int ordem) {
 	pBTree filho = criaArvoreB(ordem);
 	int i, j;
@@ -150,6 +149,7 @@ pBTree create (char **temp, pBTree *filhos, int ini, int fim, int ordem) {
 	return filho;
 }
 
+//realiza a insercao na arvore B
 char *insereAB_v2(pBTree raiz, char* chave){
 	
 	static char **temp;
@@ -358,106 +358,6 @@ pBTree insereAB_helper(pBTree raiz, char *chave) {
 	return raiz->pai;
 }
 
-void insereAB_rec(pBTree raiz, char* chave){
-
-}
-
-void insereAB(pBTree *raiz, char* chave){
-	if (raiz == NULL){
-		return;
-	}
-	//variaveis
-	int i = 0, index;
-
-	if((*raiz)->n_chaves < (*raiz)->ordem-1 && (*raiz)->filhos[0] == NULL){
-		printf("CASO - 0\n");
-		insere((*raiz), chave);
-	}
-	else{
-		//busca local de insercao
-		pBTree AUX;
-		AUX = (*raiz);
-		while(AUX->filhos[index] != NULL){
-			index = 0;
-			while(strcmp(AUX->chave[i], chave) < 0 && i < AUX->n_chaves){
-				i++;
-				index++;
-			}
-			AUX =  AUX->filhos[index];
-		}
-		//se não houver nenhum pai (raiz da arvore), split
-		if (AUX->pai == NULL){
-			printf("CASO - 1\n");
-			pBTree esquerda = criaArvoreB((*raiz)->ordem);
-			pBTree direita = criaArvoreB((*raiz)->ordem);
-			//pagina da esquerda
-			for (i = 0; i < (*raiz)->n_chaves/2; ++i){
-				strcpy(esquerda->chave[i], (*raiz)->chave[i]);
-				esquerda->n_chaves++;
-			}
-			//pagina da direita
-			for (i = (*raiz)->n_chaves/2 + 1 ; i < (*raiz)->n_chaves; ++i){
-				strcpy(direita->chave[i], (*raiz)->chave[i]);
-				direita->n_chaves++;
-			}
-			insere(direita, chave);
-
-			pBTree nova_raiz = criaArvoreB((*raiz)->ordem);
-			//insere a chave promovida na nova raiz
-			insere(nova_raiz, (*raiz)->chave[(*raiz)->n_chaves/2]);
-			esquerda->pai = nova_raiz;
-			direita->pai = nova_raiz;
-			nova_raiz->filhos[0] = esquerda;
-			nova_raiz->filhos[1] = direita;
-			limpaPagina((*raiz));
-			(*raiz) = nova_raiz;
-
-			return;
-		}
-		//se houver pai
-		else{
-			//se for possivel inserir no local
-			if (AUX->n_chaves < AUX->ordem-1){
-				printf("CASO - 2\n");
-				insere(AUX, chave);
-				return;
-			}
-			else {
-				//necessário realizar o split novamente
-				pBTree esquerda = criaArvoreB((*raiz)->ordem);
-				pBTree direita = criaArvoreB((*raiz)->ordem);
-				//pagina da esquerda
-				for (i = 0; i < AUX->n_chaves/2; ++i){
-					strcpy(esquerda->chave[i], AUX->chave[i]);
-					esquerda->n_chaves++;
-				}
-				//pagina da direita
-				for (i = AUX->n_chaves/2 + 1 ; i < AUX->n_chaves; ++i){
-					strcpy(direita->chave[i], AUX->chave[i]);
-					direita->n_chaves++;
-				}
-				insere(direita, chave);
-				//se tiver espaço no pai
-				if (AUX->pai->n_chaves < AUX->pai->ordem -1){
-					printf("CASO - 3\n");
-					index = insere(AUX->pai, AUX->chave[AUX->n_chaves/2]);
-					limpaPagina(AUX->pai->filhos[index]);
-					AUX->pai->filhos[index] = esquerda;
-					AUX->pai->filhos[index+1] = direita;
-					esquerda->pai = AUX->pai;
-					direita->pai = AUX->pai;
-					return;
-				}
-				//caso o pai não tenha espaco, procurase um pai que tenha
-				else{
-					printf("INACABADO\n");
-				}
-			}
-		}
-	}
-	return;
-}
-
 void limpaPagina(pBTree local){
 	if (local == NULL){
 		return;
@@ -574,22 +474,22 @@ pBTree leituraABarq(FILE *fp, pBTree arvB){
 		return NULL;
 	}
 	int ordem;
-	
+	size_t read;
 	char flag;
 	char chave[TAM_CHAVE];
 	int i, j;
 
-	fread(&flag, sizeof(char), 1, fp);
-	fread(&ordem, sizeof(int), 1, fp);
+	read = fread(&flag, sizeof(char), 1, fp);
+	read = fread(&ordem, sizeof(int), 1, fp);
 	
 	if (arvB == NULL) {
 		arvB = criaArvoreB(ordem);
 	}
 	
-	fread(&arvB->n_chaves, sizeof(int), 1, fp);
+	read = fread(&arvB->n_chaves, sizeof(int), 1, fp);
 
 	for (i = 0; i < arvB->n_chaves; ++i){
-		fread(chave, sizeof(char), TAM_CHAVE, fp);
+		read = fread(chave, sizeof(char), TAM_CHAVE, fp);
 		strcpy(arvB->chave[i], chave);
 	}
 

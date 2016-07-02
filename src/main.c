@@ -22,18 +22,24 @@ int main(int agrc, char** argv){
 	char nome_arq[50], chave[10];
 	while(op != 99){
 		menu();
-		scanf("%d", &op);
+		if(scanf("%d", &op) < 0){
+			return -1;
+		}
 		getchar();
 
 		switch (op){
 			case 1:
 				printf("\nDigite o nome do arquivo: ");
-				scanf("%[^\n]", nome_arq);
+				if(scanf("%[^\n]", nome_arq) <0){
+					return -1;
+				}
 				IP = criaIndicePrimario(nome_arq);
 				break;
 			case 2:
 				printf("Digite a ordem da arvore: ");
-				scanf("%d", &ordem);
+				if(scanf("%d", &ordem) < 0){
+					return -1;
+				}
 				if (ordem < 2){
 					printf("Digite um ordem maior\n");
 					break;
@@ -47,7 +53,9 @@ int main(int agrc, char** argv){
 					break;
 				}
 				printf("Digite a chave no formato 3 primeiras Letras e 5 números\n");
-				scanf("%[^\n]", chave);
+				if(scanf("%[^\n]", chave)<0){
+					return -1;
+				}
 				arvoreB = insereAB_helper(arvoreB, chave);
 				escreveABarq(saida, arvoreB);
 				break;
@@ -73,7 +81,9 @@ int main(int agrc, char** argv){
 				}
 				else{
 					printf("Digite a ordem da arvore: ");
-					scanf("%d", &ordem);
+					if(scanf("%d", &ordem) < 0){
+						return -1;
+					}
 					arvoreB = criaABIndicePrimario(IP, ordem);
 					saida = fopen("indicelista.bt", "wb");
 					escreveABarq(saida, arvoreB);
@@ -81,7 +91,9 @@ int main(int agrc, char** argv){
 				break;
 			case 7:
 				printf("Digite a chave no formato 3 primeiras Letras e 5 números\n");
-				scanf("%[^\n]", chave);
+				if(scanf("%[^\n]", chave) < 0){
+					return -1;
+				}
 				getchar();
 				if(buscaAB(arvoreB, &seeks, chave) != NULL){
 					printf("seeks = %d\n", seeks);
@@ -105,7 +117,9 @@ int main(int agrc, char** argv){
 			case 99:
 				break;
 			default:
-				system("clear");
+				if( system("clear")){
+					return -1;
+				}
 				printf("OPCAO INEXISTENTE.\n");
 				break;
 		}
@@ -113,7 +127,7 @@ int main(int agrc, char** argv){
 		printf("PRESSIONE ENTER\n");
 		getchar();
 	}
-	if (arvoreB == NULL){	
+	if (arvoreB != NULL){	
 		limpaArvoreB(arvoreB);
 	}
 	if (IP != NULL){	
@@ -127,11 +141,13 @@ int main(int agrc, char** argv){
 }
 
 void menu(){
-	system("clear");
+	if( system("clear")){
+		return;
+	}
 
 	printf("1. Abrir indice Primario\n");
 	printf("2. Criar Arvore B vazia\n");
-	printf("3. Adicionar chave\n");
+	printf("3. Adicionar chave (Arvore B)\n");
 	printf("4. Vizualizar em Ordem (Arvore B)\n");
 	printf("5. Vizualizar indice Primario\n");
 	printf("6. CRIAR arvore B a partir de indice\n");
